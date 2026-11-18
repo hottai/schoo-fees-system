@@ -105,7 +105,12 @@ return`<div class="card w"><h2>School details</h2>${F.map(([k,l])=>`<label>${l}<
 <div class="card w"><h2>New term</h2><p class="mut" style="margin-top:0">Saves this term in each pupil's history, clears payments and carries balances forward.</p><button class="b" onclick="newTerm()">Start new term</button></div>
 <div class="card w"><h2>Backup and restore</h2><p class="mut" style="margin-top:0">Download a backup weekly and send it to yourself on WhatsApp.</p><button class="b" onclick="bkFile()">Download backup file</button> <button class="b b2" onclick="backup()">Show text</button><label style="display:block;margin-top:10px">Restore from a backup file</label><input type="file" accept=".json,.txt" onchange="rf(this)"><textarea id="bt" rows="3" placeholder="Or paste backup text here"></textarea><button class="b b2" onclick="restore()">Restore from text</button></div>
 ${role==="d"?`<div class="card"><h2>Developer controls</h2><label>New bursar PIN</label><input id="n1" type="password" inputmode="numeric" maxlength="6"><label>New head teacher PIN</label><input id="n2" type="password" inputmode="numeric" maxlength="6"><button class="b" onclick="newPins()">Reset PINs</button> <button class="b dg" onclick="ask(this,'clr',()=>{S.pupils=[];S.rc=0;logit('Cleared all pupils');render();toast('All pupils cleared')})">Clear all pupils</button></div>`:""}
-<div class="card"><h2>Activity log</h2>${S.log.slice(-40).reverse().map(e=>`<div class="mut" style="padding:5px 0;border-bottom:1px solid var(--line)">${esc(e.t.replace("T"," "))} · ${RN[e.r]||"?"} · ${esc(e.a)}</div>`).join("")||'<p class="mut">No activity yet.</p>'}</div>`}
+<div class="card"><h2>Activity log</h2>${S.log.slice(-40).reverse().map(e=>`<div class="mut" style="padding:5px 0;border-bottom:1px solid var(--line)">${esc(e.t.replace("T"," "))} · ${RN[e.r]||"?"} · ${esc(e.a)}</div>`).join("")||'<p class="mut">No activity yet.</p>'}</div>
+<div class="card"><h2>About</h2>
+<p style="margin:0 0 6px"><b>School Fees Tracker</b> · v1.1</p>
+<p class="mut" style="margin:0 0 4px">Developed by <b>databycassim</b></p>
+<p class="mut" style="margin:0;font-size:12px">Data is stored only on this device. Make regular backups from Settings.</p>
+</div>`}
 
 function rcpt(){const{p,x,to}=modal,s=S.school,bal=Math.max(p.due-to,0);
 const t=`${s.name}\nOFFICIAL RECEIPT No. ${x.no}\nReceived from: Parent/Guardian of ${p.name} (${p.cls})\nAmount: ${s.cur} ${money(x.amt)}\nBeing: School fees, ${s.term} ${s.year}, paid on ${fdate(x.date)}\nFees due: ${money(p.due)} | Paid to date: ${money(to)} | Balance: ${money(bal)}\nThank you.`;
