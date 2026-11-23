@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>School Fees Tracker</title>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1f3a5f"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f3a5f">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{--bg:#f4f6fa;--card:#fff;--ink:#1c2b3a;--mut:#566676;--line:#dce3ea;--btn:#1f3a5f;--soft:#e8eef6;--g:#2e7d32;--o:#c55200;--r:#b71c1c;--acc:#f9a825;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--card:#172230;--ink:#e8eef5;--mut:#9db0c3;--line:#2a3a4c;--btn:#3f72b8;--soft:#1f2f42;--g:#3d9a43;--o:#d9631a;--r:#d23b3b;color-scheme:dark}}
@@ -26,7 +29,7 @@ label{font-size:12px;color:var(--mut);font-weight:700}
 .list{margin:12px 14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}.list .row:last-child{border-bottom:0}
 .pill{color:#fff;font-size:11px;font-weight:800;border-radius:20px;padding:3px 9px;white-space:nowrap}.pill.g{background:var(--g)}.pill.o{background:var(--o)}.pill.r{background:var(--r)}
 .mut{color:var(--mut);font-size:13px}.bar{height:10px;background:var(--soft);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%}
-.chips{display:flex;gap:8px;margin:0 14px}.chip{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:13px}.chip.on{background:var(--btn);color:#fff;border-color:var(--btn)}
+.chips{display:flex;gap:8px;margin:0 14px;flex-wrap:wrap}.chip{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:13px}.chip.on{background:var(--btn);color:#fff;border-color:var(--btn)}
 #tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
 #tabs button{flex:1;background:none;border:0;border-top:3px solid transparent;padding:12px 4px;font:inherit;font-size:13px;font-weight:700;color:var(--mut)}#tabs button.on{color:var(--btn);border-top-color:var(--acc)}
 details{margin:12px 14px}summary{font-weight:800;color:var(--btn);padding:8px 0;cursor:pointer}
@@ -35,21 +38,44 @@ details{margin:12px 14px}summary{font-weight:800;color:var(--btn);padding:8px 0;
 .rc .h{background:#1f3a5f;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;gap:8px;font-weight:800}.rc .bd{padding:14px}.rc .amt{background:#e8eef6;border-radius:8px;text-align:center;font-size:26px;font-weight:800;color:#1f3a5f;padding:10px;margin:10px 0}
 .rc p{margin:4px 0}.rc .ft{display:flex;gap:8px;padding:0 14px 14px;flex-wrap:wrap}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#1c2b3a;color:#fff;padding:8px 14px;border-radius:20px;opacity:0;transition:opacity .2s;z-index:30;font-size:13px}
-body.ro .w{display:none!important}.lk{max-width:380px;margin:40px auto}@media screen and (min-width:900px){html{background:var(--soft)}body{max-width:820px;margin:0 auto;min-height:100vh;background:var(--bg);box-shadow:0 0 0 1px var(--line)}#tabs{left:50%;right:auto;width:820px;transform:translateX(-50%)}#app>.grid{grid-template-columns:repeat(4,1fr)}.b,.chip,.row[onclick]{cursor:pointer}.b:hover{filter:brightness(1.12)}.row[onclick]:hover{background:var(--soft)}}@media print{body>*:not(#modal){display:none!important}body::before{display:none}.modal{position:static;background:none;padding:0}.noprint{display:none!important}}
+body.ro .w{display:none!important}.lk{max-width:380px;margin:40px auto}
+@media screen and (min-width:900px){html{background:var(--soft)}body{max-width:820px;margin:0 auto;min-height:100vh;background:var(--bg);box-shadow:0 0 0 1px var(--line)}#tabs{left:50%;right:auto;width:820px;transform:translateX(-50%)}#app>.grid{grid-template-columns:repeat(4,1fr)}.b,.chip,.row[onclick]{cursor:pointer}.b:hover{filter:brightness(1.12)}.row[onclick]:hover{background:var(--soft)}}
+@media print{body>*:not(#modal){display:none!important}body::before{display:none}.modal{position:static;background:none;padding:0}.noprint{display:none!important}}
+.theme-btn{float:right;margin-left:8px;background:transparent;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer}
+.breakdown{font-size:13px;margin:8px 0;padding:8px;background:var(--soft);border-radius:8px}
+.breakdown div{display:flex;justify-content:space-between;margin:2px 0}
 </style>
 </head>
 <body>
 <div id="app"></div><div id="tabs"></div><div id="modal"></div><div id="toast"></div>
 <script>
-const KEY="feesTracker.v1",$=s=>document.querySelector(s);
+const KEY="feesTracker.v2",$=s=>document.querySelector(s);
 const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const money=n=>Math.round(n).toLocaleString("en-US"),uid=()=>Math.random().toString(36).slice(2,9);
+const money=n=>Math.round(n||0).toLocaleString("en-US");
+const uid=()=>Math.random().toString(36).slice(2,9);
 const today=()=>new Date().toISOString().slice(0,10);
 const fdate=d=>{const x=new Date(d+"T00:00:00");return isNaN(x)?d:x.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"})};
-function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.pupils))return o}}catch(e){}
-return{school:{name:"Your School Name",term:"Term 3",year:"2026",cur:"UGX",deadline:"",payinfo:""},pupils:[],rc:0}}
-let S=load(),tab="home",sel=null,q="",flt="all",modal=null,armed=null,role=null,tries=0,wait=0,idle;
-function mig(){S.log=S.log||[];S.auth=S.auth||{}}mig();
+const METHODS=["Cash","MTN MoMo","Airtel Money","Bank","Other"];
+
+function load(){
+  try{
+    let r=localStorage.getItem(KEY);
+    if(!r){ // migrate from v1 if present
+      r=localStorage.getItem("feesTracker.v1");
+      if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.pupils)){o.version=2;localStorage.setItem(KEY,JSON.stringify(o));localStorage.removeItem("feesTracker.v1");return o}}
+    }
+    if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.pupils))return o}
+  }catch(e){}
+  return{version:2,school:{name:"Your School Name",term:"Term 3",year:"2026",cur:"UGX",deadline:"",payinfo:"Pay via MTN MoMo or at the school office.",address:"",motto:""},fees:{},pupils:[],rc:0,theme:"system"}
+}
+let S=load(),tab="home",sel=null,q="",flt="all",clsFlt="all",modal=null,armed=null,role=null,tries=0,wait=0,idle;
+function mig(){
+  S.log=S.log||[];S.auth=S.auth||{};S.fees=S.fees||{};S.theme=S.theme||"system";
+  S.pupils.forEach(p=>{p.adm=p.adm||"";p.arr=p.arr||0;p.base=p.base!=null?p.base:p.due;p.pays=(p.pays||[]).map(x=>({...x,method:x.method||"Cash"}))});
+}
+mig();
+applyTheme();
+
 const hh=s=>{let a=5381,b=52711;for(const c of s+"|fees"){a=(a*33^c.charCodeAt(0))>>>0;b=(b*31+c.charCodeAt(0))>>>0}return a.toString(36)+b.toString(36)};
 const nowL=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);
 function logit(a){S.log.push({t:nowL(),r:role,a});if(S.log.length>500)S.log.shift();save()}
@@ -58,107 +84,253 @@ function bump(){clearTimeout(idle);if(role)idle=setTimeout(lock,3e5)}
 ["click","touchstart","keydown"].forEach(e=>addEventListener(e,bump));
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast("Could not save on this device")}}
 function toast(t){const e=$("#toast");e.textContent=t;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,1800)}
-const calc=p=>{const paid=p.pays.reduce((a,x)=>a+(x.void?0:x.amt),0),bal=p.due-paid;return{paid,bal,st:bal<=0?"PAID":paid===0?"NONE":"PART"}};
+function applyTheme(){
+  const t=S.theme||"system";
+  if(t==="dark")document.documentElement.setAttribute("data-theme","dark");
+  else if(t==="light")document.documentElement.setAttribute("data-theme","light");
+  else document.documentElement.removeAttribute("data-theme");
+}
+const calc=p=>{const paid=(p.pays||[]).reduce((a,x)=>a+(x.void?0:x.amt),0),bal=p.due-paid;return{paid,bal,st:bal<=0?"PAID":paid===0?"NONE":"PART"}};
 const ST={PAID:["PAID","g"],PART:["PART PAID","o"],NONE:["NOT PAID","r"]};
 const pill=s=>`<span class="pill ${ST[s][1]}">${ST[s][0]}</span>`;
 function ph(raw){const d=String(raw||"").replace(/\D/g,"");if(!d)return"";if(d.startsWith("256"))return d;if(d.startsWith("0"))return"256"+d.slice(1);if(d.length===9)return"256"+d;return d}
-const showPh=i=>i.startsWith("256")?"0"+i.slice(3):i;
+const showPh=i=>i&&i.startsWith("256")?"0"+i.slice(3):(i||"");
 const num=v=>{const n=parseFloat(String(v).replace(/[^\d.]/g,""));return isNaN(n)?0:n};
-function msg(p){const c=calc(p),s=S.school;return`Dear Parent/Guardian, this is a reminder from ${s.name}. ${p.name} (${p.cls}) has a school fees balance of ${s.cur} ${money(c.bal)} for ${s.term} ${s.year} (paid ${money(c.paid)} of ${money(p.due)}).`+(s.deadline?` Kindly clear it by ${s.deadline}.`:"")+(s.payinfo?" "+s.payinfo:"")+" Thank you."}
+function msg(p){const c=calc(p),s=S.school;return`Dear Parent/Guardian, this is a reminder from ${s.name}. ${p.name} (${p.cls}${p.adm?" / "+p.adm:""}) has a school fees balance of ${s.cur} ${money(c.bal)} for ${s.term} ${s.year} (paid ${money(c.paid)} of ${money(p.due)}).`+(s.deadline?` Kindly clear it by ${s.deadline}.`:"")+(s.payinfo?" "+s.payinfo:"")+" Thank you."}
 const wa=(p,t)=>`https://wa.me/${ph(p.phone)}?text=${encodeURIComponent(t)}`;
 const P_=id=>S.pupils.find(p=>p.id===id);
+function nextAdm(){const ys=(S.school.year||"").slice(-2);const n=S.pupils.length+1;return `${ys}${String(n).padStart(3,"0")}`}
+function feeFor(cls){return S.fees[cls]||0}
 
-function home(){const P=S.pupils;let due=0,paid=0;const cl={};
-P.forEach(p=>{const c=Math.min(calc(p).paid,p.due);due+=p.due;paid+=c;cl[p.cls]=cl[p.cls]||{d:0,p:0};cl[p.cls].d+=p.due;cl[p.cls].p+=c});
-if(!P.length)return`<div class="card"><h2>Welcome</h2><p>No pupils yet. Open the <b>Pupils</b> tab to add pupils, or paste a whole class at once.</p><p class="mut">Your data is saved on this phone or computer. Use <b>Settings</b> to make a backup.</p></div>`;
-const pct=due?Math.round(paid/due*100):0,n={PAID:0,PART:0,NONE:0};P.forEach(p=>n[calc(p).st]++);
-return`${S.lb&&Date.now()-S.lb<6048e5?"":`<div class="card" style="border-color:var(--o)"><b>Backup needed.</b> Open Settings and download a backup file.</div>`}<div class="grid"><div class="stat" style="background:#1f3a5f"><b>${money(due)}</b><span>Expected (${esc(S.school.cur)})</span></div><div class="stat" style="background:#2e7d32"><b>${money(paid)}</b><span>Collected</span></div><div class="stat" style="background:#b71c1c"><b>${money(Math.max(due-paid,0))}</b><span>Outstanding</span></div><div class="stat" style="background:#0b6e99"><b>${pct}%</b><span>Collected</span></div></div>
+function home(){
+  const P=S.pupils;let due=0,paid=0;const cl={};
+  P.forEach(p=>{const c=Math.min(calc(p).paid,p.due);due+=p.due;paid+=c;cl[p.cls]=cl[p.cls]||{d:0,p:0};cl[p.cls].d+=p.due;cl[p.cls].p+=c});
+  if(!P.length)return`<div class="card"><h2>Welcome</h2><p>No pupils yet. Open the <b>Pupils</b> tab to add pupils, or paste a whole class at once.</p><p class="mut">Your data is saved on this phone or computer. Use <b>Settings</b> to make a backup every week.</p></div>`;
+  const pct=due?Math.round(paid/due*100):0,n={PAID:0,PART:0,NONE:0};P.forEach(p=>n[calc(p).st]++);
+  const top=P.filter(p=>calc(p).bal>0).sort((a,b)=>calc(b).bal-calc(a).bal).slice(0,5);
+  return`${S.lb&&Date.now()-S.lb<6048e5?"":`<div class="card" style="border-color:var(--o)"><b>Backup needed.</b> Open Settings and download a backup file. Keep it on WhatsApp.</div>`}
+<div class="grid">
+  <div class="stat" style="background:#1f3a5f"><b>${money(due)}</b><span>Expected (${esc(S.school.cur)})</span></div>
+  <div class="stat" style="background:#2e7d32"><b>${money(paid)}</b><span>Collected</span></div>
+  <div class="stat" style="background:#b71c1c"><b>${money(Math.max(due-paid,0))}</b><span>Outstanding</span></div>
+  <div class="stat" style="background:#0b6e99"><b>${pct}%</b><span>Collected</span></div>
+</div>
 <div class="card"><p style="margin:0"><b>${P.length}</b> pupils: <b style="color:var(--g)">${n.PAID}</b> paid, <b style="color:var(--o)">${n.PART}</b> part paid, <b style="color:var(--r)">${n.NONE}</b> not paid</p></div>
+${top.length?`<div class="card"><h2>Top debtors</h2><div class="list" style="margin:0;border:0">${top.map(p=>{const c=calc(p);return`<div class="row" onclick="pick('${p.id}')" style="cursor:pointer;padding:8px 0"><div><b>${esc(p.name)}</b> <span class="mut">${esc(p.cls)}</span></div><div style="color:var(--r);font-weight:700">${money(c.bal)}</div></div>`}).join("")}</div></div>`:""}
 <div class="card"><h2>Collection by class</h2>${Object.keys(cl).sort().map(k=>{const v=cl[k],r=v.d?Math.round(v.p/v.d*100):0,c=r>=75?"var(--g)":r>=40?"var(--o)":"var(--r)";return`<div style="margin-bottom:10px"><div class="mut" style="display:flex;justify-content:space-between"><b style="color:var(--ink)">${esc(k)}</b><span>${money(v.p)} of ${money(v.d)} · ${r}%</span></div><div class="bar"><i style="width:${r}%;background:${c}"></i></div></div>`}).join("")}</div>`}
 
-function plist(){const t=q.trim().toLowerCase();
-const L=S.pupils.filter(p=>(!t||(p.name+" "+p.cls).toLowerCase().includes(t))&&(flt==="all"||(flt==="owe"?calc(p).bal>0:calc(p).bal<=0)))
-.sort((a,b)=>a.cls.localeCompare(b.cls)||a.name.localeCompare(b.name));
-return L.length?`<div class="list">${L.map(p=>{const c=calc(p);return`<div class="row" onclick="pick('${p.id}')" style="cursor:pointer"><div><b>${esc(p.name)}</b><div class="mut">${esc(p.cls)} · balance ${money(Math.max(c.bal,0))}</div></div>${pill(c.st)}</div>`}).join("")}</div>`:`<p class="mut" style="margin:14px">No pupils found.</p>`}
-function pupils(){return`<details class="w" ${S.pupils.length?"":"open"}><summary>+ Add a pupil</summary><div class="card" style="margin:0"><label>Name</label><input id="an"><label>Class</label><input id="ac" placeholder="e.g. P3"><label>Parent phone (optional)</label><input id="ap" inputmode="tel"><label>Fees due (${esc(S.school.cur)})</label><input id="af" inputmode="numeric"><button class="b" onclick="addP()">Add pupil</button></div></details>
-<details class="w"><summary>+ Add many pupils (paste)</summary><div class="card" style="margin:0"><p class="mut" style="margin-top:0">One pupil per line: <b>Name, Class, Phone, Fees</b> (phone is optional). You can copy these straight from Excel.</p><textarea id="bk" rows="5" placeholder="Nakato Grace, P1, 0701234567, 350000"></textarea><button class="b" onclick="addMany()">Add all</button></div></details>
-<div style="margin:0 14px"><input id="qs" placeholder="Search pupil or class" value="${esc(q)}" oninput="q=this.value;$('#pl').innerHTML=plist()"></div>
-<div class="chips">${[["all","All"],["owe","Owing"],["paid","Paid up"]].map(([k,l])=>`<button class="chip ${flt===k?"on":""}" onclick="flt='${k}';render()">${l}</button>`).join("")}</div><div id="pl">${plist()}</div>`}
+function plist(){
+  const t=q.trim().toLowerCase();
+  const L=S.pupils.filter(p=>{
+    const match=(p.name+" "+p.cls+" "+(p.adm||"")+" "+showPh(p.phone)).toLowerCase().includes(t);
+    const stOk=flt==="all"||(flt==="owe"?calc(p).bal>0:calc(p).bal<=0);
+    const clOk=clsFlt==="all"||p.cls===clsFlt;
+    return match&&stOk&&clOk;
+  }).sort((a,b)=>a.cls.localeCompare(b.cls)||a.name.localeCompare(b.name));
+  return L.length?`<div class="list">${L.map(p=>{const c=calc(p);const last=p.pays&&p.pays.length?p.pays.filter(x=>!x.void).slice(-1)[0]:null;
+    return`<div class="row" onclick="pick('${p.id}')" style="cursor:pointer"><div><b>${esc(p.name)}</b>${p.adm?` <span class="mut">#${esc(p.adm)}</span>`:""}<div class="mut">${esc(p.cls)} · bal ${money(Math.max(c.bal,0))}${last?` · last ${fdate(last.date)}`:""}</div></div>${pill(c.st)}</div>`}).join("")}</div>`:`<p class="mut" style="margin:14px">No pupils found.</p>`}
 
-function detail(){const p=P_(sel);if(!p){sel=null;return pupils()}const c=calc(p),s=S.school;
-return`<div style="margin:12px 14px"><button class="b b2 sm" onclick="sel=null;render()">← Back</button></div>
-<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><div><h2 style="margin:0">${esc(p.name)}</h2><div class="mut">${esc(p.cls)}${p.phone?" · "+esc(showPh(p.phone)):""}</div></div>${pill(c.st)}</div>
-<div class="grid" style="margin:12px 0 0"><div class="stat" style="background:#1f3a5f"><b>${money(p.due)}</b><span>Fees due</span></div><div class="stat" style="background:#2e7d32"><b>${money(c.paid)}</b><span>Paid</span></div></div>
-<p style="font-size:18px;margin:12px 0 0">Balance: <b style="color:${c.bal>0?"var(--r)":"var(--g)"}">${s.cur} ${money(Math.max(c.bal,0))}</b></p>
-${(p.hist||[]).map(h=>`<div class="mut">Past: ${esc(h.t)} paid ${money(h.p)} of ${money(h.d)}</div>`).join("")}${c.bal>0?`<p style="margin:10px 0 0"><a class="b wa sm" target="_blank" rel="noopener" href="${wa(p,msg(p))}">WhatsApp reminder</a> ${p.phone?`<a class="b b2 sm" href="tel:+${p.phone}">Call</a>`:""}</p>`:""}</div>
-<div class="card w"><h2>Record a payment</h2><label>Amount (${esc(s.cur)})</label><input id="pa" inputmode="numeric"><label>Date</label><input id="pd" type="date" value="${today()}"><label>Note (optional)</label><input id="pn" placeholder="e.g. Mobile Money"><button class="b" onclick="addPay('${p.id}')">Save payment</button></div>
-<div class="list">${p.pays.length?p.pays.map(x=>`<div class="row"><div${x.void?' style="text-decoration:line-through;opacity:.6"':''}><b>${s.cur} ${money(x.amt)}</b><div class="mut">${fdate(x.date)}${x.note?" · "+esc(x.note):""} · ${esc(x.no)}</div></div><div>${x.void?`<span class="mut">VOID: ${esc(x.void.why)}</span>`:`<button class="b sm" onclick="showR('${p.id}','${x.id}')">Receipt</button> <button class="b b2 sm w" onclick="voidPay('${p.id}','${x.id}')">Void</button>`}</div></div>`).join(""):`<div class="row mut">No payments yet.</div>`}</div>
-<details class="w"><summary>Edit pupil details</summary><div class="card" style="margin:0"><label>Name</label><input id="en" value="${esc(p.name)}"><label>Class</label><input id="ec" value="${esc(p.cls)}"><label>Parent phone</label><input id="ep" inputmode="tel" value="${esc(p.phone?showPh(p.phone):"")}"><label>Fees due</label><input id="ef" inputmode="numeric" value="${p.due}"><button class="b" onclick="editP('${p.id}')">Save changes</button> <button class="b dg" onclick="ask(this,'dp',()=>delP('${p.id}'))">Delete pupil</button></div></details>`}
+function pupils(){
+  const classes=[...new Set(S.pupils.map(p=>p.cls))].sort();
+  return`<details class="w" ${S.pupils.length?"":"open"}><summary>+ Add a pupil</summary><div class="card" style="margin:0">
+<label>Name</label><input id="an">
+<label>Admission No. (optional)</label><input id="aa" placeholder="Auto: ${nextAdm()}">
+<label>Class</label><input id="ac" placeholder="e.g. P3" list="classlist" oninput="const f=feeFor(this.value);if(f&&!$('#af').value)$('#af').value=f">
+<datalist id="classlist">${Object.keys(S.fees).map(c=>`<option value="${esc(c)}">`).join("")}${classes.map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
+<label>Parent phone (optional)</label><input id="ap" inputmode="tel" placeholder="07xxxxxxxx">
+<label>Fees due (${esc(S.school.cur)})</label><input id="af" inputmode="numeric">
+<button class="b" onclick="addP()">Add pupil</button></div></details>
+<details class="w"><summary>+ Add many pupils (paste from Excel)</summary><div class="card" style="margin:0"><p class="mut" style="margin-top:0">One pupil per line: <b>Name, Class, Phone, Fees</b> or <b>Name, Class, Fees</b>. Phone optional.</p>
+<textarea id="bk" rows="5" placeholder="Nakato Grace, P1, 0701234567, 350000&#10;Okello John, P2, 280000"></textarea>
+<button class="b" onclick="addMany()">Add all</button></div></details>
+<div style="margin:0 14px"><input id="qs" placeholder="Search name, class, admission or phone" value="${esc(q)}" oninput="q=this.value;$('#pl').innerHTML=plist()"></div>
+<div class="chips" style="margin-top:10px">${[["all","All"],["owe","Owing"],["paid","Paid up"]].map(([k,l])=>`<button class="chip ${flt===k?"on":""}" onclick="flt='${k}';render()">${l}</button>`).join("")}</div>
+${classes.length>1?`<div class="chips" style="margin-top:6px"><button class="chip ${clsFlt==="all"?"on":""}" onclick="clsFlt='all';render()">All classes</button>${classes.map(c=>`<button class="chip ${clsFlt===c?"on":""}" onclick="clsFlt='${esc(c)}';render()">${esc(c)}</button>`).join("")}</div>`:""}
+<div id="pl">${plist()}</div>`}
 
-function rem(){const L=S.pupils.filter(p=>calc(p).bal>0).sort((a,b)=>calc(b).bal-calc(a).bal);
-if(!L.length)return`<div class="card"><h2>Reminders</h2><p>Nobody owes fees right now.</p></div>`;
-return`<div class="card"><h2>Parent reminders</h2><p class="mut" style="margin:0">Tap WhatsApp to open the message, already written, for each parent.</p></div><div class="list">${L.map(p=>`<div class="row"><div><b>${esc(p.name)}</b> <span class="mut">${esc(p.cls)}</span><div class="mut">Owes ${S.school.cur} ${money(calc(p).bal)}${p.phone?" · "+esc(showPh(p.phone)):" · no phone"}</div></div><div><a class="b wa sm" target="_blank" rel="noopener" href="${wa(p,msg(p))}">WhatsApp</a>${p.phone?` <a class="b b2 sm" href="tel:+${p.phone}">Call</a>`:""}</div></div>`).join("")}</div>`}
+function detail(){
+  const p=P_(sel);if(!p){sel=null;return pupils()}
+  const c=calc(p),s=S.school,arr=p.arr||0,curFee=p.due-arr;
+  return`<div style="margin:12px 14px"><button class="b b2 sm" onclick="sel=null;render()">← Back</button></div>
+<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><div><h2 style="margin:0">${esc(p.name)}</h2>
+<div class="mut">${esc(p.cls)}${p.adm?" · #"+esc(p.adm):""}${p.phone?" · "+esc(showPh(p.phone)):""}</div></div>${pill(c.st)}</div>
+<div class="breakdown">
+  <div><span>Current term fee</span><b>${s.cur} ${money(curFee)}</b></div>
+  ${arr?`<div><span>Arrears brought forward</span><b>${s.cur} ${money(arr)}</b></div>`:""}
+  <div><span>Total due</span><b>${s.cur} ${money(p.due)}</b></div>
+  <div><span>Paid</span><b style="color:var(--g)">${s.cur} ${money(c.paid)}</b></div>
+  <div style="border-top:1px solid var(--line);padding-top:4px;margin-top:4px"><span>Balance</span><b style="color:${c.bal>0?"var(--r)":"var(--g)"}">${s.cur} ${money(Math.max(c.bal,0))}</b></div>
+</div>
+${(p.hist||[]).map(h=>`<div class="mut">Past: ${esc(h.t)} paid ${money(h.p)} of ${money(h.d)}</div>`).join("")}
+${c.bal>0?`<p style="margin:10px 0 0"><a class="b wa sm" target="_blank" rel="noopener" href="${wa(p,msg(p))}">WhatsApp reminder</a> ${p.phone?`<a class="b b2 sm" href="tel:+${p.phone}">Call</a>`:""}</p>`:""}
+</div>
+<div class="card w"><h2>Record a payment</h2>
+<label>Amount (${esc(s.cur)})</label><input id="pa" inputmode="numeric">
+<label>Date</label><input id="pd" type="date" value="${today()}">
+<label>Method</label><select id="pm">${METHODS.map(m=>`<option value="${m}">${m}</option>`).join("")}</select>
+<label>Note (optional)</label><input id="pn" placeholder="e.g. Transaction ID">
+<button class="b" onclick="addPay('${p.id}')">Save payment</button></div>
+<div class="list">${p.pays.length?p.pays.slice().reverse().map(x=>`<div class="row"><div${x.void?' style="text-decoration:line-through;opacity:.6"':''}><b>${s.cur} ${money(x.amt)}</b><div class="mut">${fdate(x.date)} · ${esc(x.method||"Cash")}${x.note?" · "+esc(x.note):""} · ${esc(x.no)}</div></div><div>${x.void?`<span class="mut">VOID: ${esc(x.void.why)}</span>`:`<button class="b sm" onclick="showR('${p.id}','${x.id}')">Receipt</button> <button class="b b2 sm w" onclick="voidPay('${p.id}','${x.id}')">Void</button>`}</div></div>`).join(""):`<div class="row mut">No payments yet.</div>`}</div>
+<details class="w"><summary>Edit pupil details</summary><div class="card" style="margin:0">
+<label>Name</label><input id="en" value="${esc(p.name)}">
+<label>Admission No.</label><input id="ea" value="${esc(p.adm||"")}">
+<label>Class</label><input id="ec" value="${esc(p.cls)}" list="classlist2">
+<datalist id="classlist2">${Object.keys(S.fees).map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
+<label>Parent phone</label><input id="ep" inputmode="tel" value="${esc(p.phone?showPh(p.phone):"")}">
+<label>Fees due (total)</label><input id="ef" inputmode="numeric" value="${p.due}">
+<button class="b" onclick="editP('${p.id}')">Save changes</button>
+<button class="b dg" onclick="ask(this,'dp',()=>delP('${p.id}'))">Delete pupil</button></div></details>`}
 
-function sett(){const F=[["name","School name"],["term","Term"],["year","Year"],["cur","Currency"],["deadline","Payment deadline (e.g. 30 Nov 2026)"],["payinfo","How to pay (added to reminders)"]],RN={b:"Bursar",h:"Head",d:"Dev"};
-return`<div class="card w"><h2>School details</h2>${F.map(([k,l])=>`<label>${l}</label><input value="${esc(S.school[k])}" onchange="S.school.${k}=this.value;logit('Changed ${k}');render();toast('Saved')">`).join("")}</div>
-<div class="card"><h2>Reports</h2><button class="b sm" onclick="csv(0)">All pupils (Excel/CSV)</button> <button class="b b2 sm" onclick="csv(1)">Defaulters only</button></div>
-<div class="card w"><h2>New term</h2><p class="mut" style="margin-top:0">Saves this term in each pupil's history, clears payments and carries balances forward.</p><button class="b" onclick="newTerm()">Start new term</button></div>
-<div class="card w"><h2>Backup and restore</h2><p class="mut" style="margin-top:0">Download a backup weekly and send it to yourself on WhatsApp.</p><button class="b" onclick="bkFile()">Download backup file</button> <button class="b b2" onclick="backup()">Show text</button><label style="display:block;margin-top:10px">Restore from a backup file</label><input type="file" accept=".json,.txt" onchange="rf(this)"><textarea id="bt" rows="3" placeholder="Or paste backup text here"></textarea><button class="b b2" onclick="restore()">Restore from text</button></div>
-${role==="d"?`<div class="card"><h2>Developer controls</h2><label>New bursar PIN</label><input id="n1" type="password" inputmode="numeric" maxlength="6"><label>New head teacher PIN</label><input id="n2" type="password" inputmode="numeric" maxlength="6"><button class="b" onclick="newPins()">Reset PINs</button> <button class="b dg" onclick="ask(this,'clr',()=>{S.pupils=[];S.rc=0;logit('Cleared all pupils');render();toast('All pupils cleared')})">Clear all pupils</button></div>`:""}
-<div class="card"><h2>Activity log</h2>${S.log.slice(-40).reverse().map(e=>`<div class="mut" style="padding:5px 0;border-bottom:1px solid var(--line)">${esc(e.t.replace("T"," "))} · ${RN[e.r]||"?"} · ${esc(e.a)}</div>`).join("")||'<p class="mut">No activity yet.</p>'}</div>
-<div class="card"><h2>About</h2>
-<p style="margin:0 0 6px"><b>School Fees Tracker</b> · v1.1</p>
-<p class="mut" style="margin:0 0 4px">Developed by <b>databycassim</b></p>
-<p class="mut" style="margin:0;font-size:12px">Data is stored only on this device. Make regular backups from Settings.</p>
-</div>`}
+function rem(){
+  const L=S.pupils.filter(p=>calc(p).bal>0).sort((a,b)=>calc(b).bal-calc(a).bal);
+  if(!L.length)return`<div class="card"><h2>Reminders</h2><p>Nobody owes fees right now. Well done.</p></div>`;
+  return`<div class="card"><h2>Parent reminders</h2><p class="mut" style="margin:0">Tap WhatsApp to open a ready-written message for each parent. Sorted by amount owed.</p></div>
+<div class="list">${L.map(p=>`<div class="row"><div><b>${esc(p.name)}</b> <span class="mut">${esc(p.cls)}${p.adm?" · #"+esc(p.adm):""}</span><div class="mut">Owes ${S.school.cur} ${money(calc(p).bal)}${p.phone?" · "+esc(showPh(p.phone)):" · no phone"}</div></div>
+<div><a class="b wa sm" target="_blank" rel="noopener" href="${wa(p,msg(p))}">WhatsApp</a>${p.phone?` <a class="b b2 sm" href="tel:+${p.phone}">Call</a>`:""}</div></div>`).join("")}</div>`}
 
-function rcpt(){const{p,x,to}=modal,s=S.school,bal=Math.max(p.due-to,0);
-const t=`${s.name}\nOFFICIAL RECEIPT No. ${x.no}\nReceived from: Parent/Guardian of ${p.name} (${p.cls})\nAmount: ${s.cur} ${money(x.amt)}\nBeing: School fees, ${s.term} ${s.year}, paid on ${fdate(x.date)}\nFees due: ${money(p.due)} | Paid to date: ${money(to)} | Balance: ${money(bal)}\nThank you.`;
-return`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="rc"><div class="h"><span>${esc(s.name)}</span><span style="text-align:right;font-size:12px">OFFICIAL RECEIPT<br>No. ${esc(x.no)}</span></div><div class="bd"><p>Received from: <b>Parent/Guardian of ${esc(p.name)}</b> (${esc(p.cls)})</p><div class="amt">${esc(s.cur)} ${money(x.amt)}</div><p>Being: School fees, ${esc(s.term)} ${esc(s.year)}</p><p>Date: ${fdate(x.date)}${x.note?" · "+esc(x.note):""}</p><p style="font-size:13px">Fees due <b>${money(p.due)}</b> · Paid to date <b>${money(to)}</b> · Balance <b>${money(bal)}</b></p><p style="margin-top:16px;font-size:13px">Received by: ____________________</p></div>
-<div class="ft noprint"><a class="b wa sm" target="_blank" rel="noopener" href="${wa(p,t)}">Send on WhatsApp</a><button class="b sm" onclick="window.print()">Print</button><button class="b b2 sm" onclick="modal=null;render()">Close</button></div></div></div>`}
+function sett(){
+  const F=[["name","School name"],["term","Term"],["year","Year"],["cur","Currency"],["deadline","Payment deadline (e.g. 30 Nov 2026)"],["payinfo","How to pay (added to reminders)"],["address","School address (shown on receipts)"],["motto","Motto / short note (shown on receipts)"]],RN={b:"Bursar",h:"Head",d:"Dev"};
+  const feeRows=Object.keys(S.fees).sort().map(c=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><input value="${esc(c)}" style="flex:1" onchange="const old='${esc(c)}';const v=this.value.trim();if(v&&v!==old){S.fees[v]=S.fees[old];delete S.fees[old];save();render()}"><input type="number" value="${S.fees[c]}" style="width:110px" onchange="S.fees['${esc(c)}']=num(this.value);save();toast('Fee updated')"><button class="b b2 sm" onclick="delete S.fees['${esc(c)}'];save();render()">×</button></div>`).join("");
+  return`<div class="card w"><h2>School details</h2>${F.map(([k,l])=>`<label>${l}</label><input value="${esc(S.school[k]||"")}" onchange="S.school.${k}=this.value;logit('Changed ${k}');render();toast('Saved')">`).join("")}</div>
+<div class="card w"><h2>Default fees by class</h2><p class="mut" style="margin-top:0">Set once. When you add a pupil and type a class, the fee fills automatically.</p>
+${feeRows||'<p class="mut">No classes set yet.</p>'}
+<div style="display:flex;gap:8px;margin-top:8px"><input id="nfc" placeholder="Class e.g. P3" style="flex:1"><input id="nff" type="number" placeholder="Fee" style="width:110px"><button class="b sm" onclick="const c=$('#nfc').value.trim(),f=num($('#nff').value);if(!c){toast('Enter class');return}S.fees[c]=f;save();render();toast('Added')}">Add</button></div></div>
+<div class="card"><h2>Appearance</h2>
+<label>Theme</label>
+<select onchange="S.theme=this.value;applyTheme();save();toast('Theme saved')">
+<option value="system" ${S.theme==="system"?"selected":""}>System</option>
+<option value="light" ${S.theme==="light"?"selected":""}>Light</option>
+<option value="dark" ${S.theme==="dark"?"selected":""}>Dark</option>
+</select></div>
+<div class="card"><h2>Reports</h2>
+<button class="b sm" onclick="csv(0)">All pupils (Excel/CSV)</button>
+<button class="b b2 sm" onclick="csv(1)">Defaulters only</button></div>
+<div class="card w"><h2>New term</h2><p class="mut" style="margin-top:0">Saves this term in each pupil's history, clears payments and carries balances forward as arrears.</p>
+<button class="b" onclick="newTerm()">Start new term</button></div>
+<div class="card w"><h2>Backup and restore</h2><p class="mut" style="margin-top:0">Download a backup weekly and send it to yourself on WhatsApp. This is your safety net.</p>
+<button class="b" onclick="bkFile()">Download backup file</button>
+<button class="b b2" onclick="backup()">Show text</button>
+<label style="display:block;margin-top:10px">Restore from a backup file</label>
+<input type="file" accept=".json,.txt" onchange="rf(this)">
+<textarea id="bt" rows="3" placeholder="Or paste backup text here"></textarea>
+<button class="b b2" onclick="restore()">Restore from text</button></div>
+${role==="d"?`<div class="card"><h2>Developer controls</h2>
+<label>New bursar PIN</label><input id="n1" type="password" inputmode="numeric" maxlength="6">
+<label>New head teacher PIN</label><input id="n2" type="password" inputmode="numeric" maxlength="6">
+<button class="b" onclick="newPins()">Reset PINs</button>
+<button class="b dg" onclick="ask(this,'clr',()=>{S.pupils=[];S.rc=0;logit('Cleared all pupils');render();toast('All pupils cleared')})">Clear all pupils</button></div>`:""}
+<div class="card"><h2>Activity log</h2>${S.log.slice(-40).reverse().map(e=>`<div class="mut" style="padding:5px 0;border-bottom:1px solid var(--line)">${esc(e.t.replace("T"," "))} · ${RN[e.r]||"?"} · ${esc(e.a)}</div>`).join("")||'<p class="mut">No activity yet.</p>'}</div>`}
 
-function render(){const s=S.school;document.body.className=role==="h"?"ro":"";if(!role){$("#app").innerHTML=lockUI();$("#tabs").innerHTML="";$("#modal").innerHTML="";return}
-$("#app").innerHTML=`<header><button class="b b2 sm" style="float:right;color:#fff;border-color:#fff" onclick="lock()">Lock</button><div class="sn">${esc(s.name)}</div><div class="sub">School Fees · ${esc(s.term)} ${esc(s.year)} · ${{b:"Bursar",h:"Head teacher (view only)",d:"Developer"}[role]}</div></header>`+(sel?detail():tab==="home"?home():tab==="pupils"?pupils():tab==="rem"?rem():sett());
-$("#tabs").innerHTML=[["home","Home"],["pupils","Pupils"],["rem","Reminders"],["set","Settings"]].map(([k,l])=>`<button class="${!sel&&tab===k||sel&&k==="pupils"?"on":""}" onclick="tab='${k}';sel=null;render();scrollTo(0,0)">${l}</button>`).join("");
-$("#modal").innerHTML=modal?rcpt():""}
+function rcpt(){
+  const{p,x,to}=modal,s=S.school,bal=Math.max(p.due-to,0);
+  const t=`${s.name}\n${s.address?s.address+"\n":""}OFFICIAL RECEIPT No. ${x.no}\nReceived from: Parent/Guardian of ${p.name} (${p.cls}${p.adm?" / "+p.adm:""})\nAmount: ${s.cur} ${money(x.amt)}\nMethod: ${x.method||"Cash"}\nBeing: School fees, ${s.term} ${s.year}, paid on ${fdate(x.date)}\nFees due: ${money(p.due)} | Paid to date: ${money(to)} | Balance: ${money(bal)}\n${s.motto?s.motto+"\n":""}Thank you.`;
+  return`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="rc">
+<div class="h"><span>${esc(s.name)}</span><span style="text-align:right;font-size:12px">OFFICIAL RECEIPT<br>No. ${esc(x.no)}</span></div>
+<div class="bd">
+${s.address?`<p style="font-size:12px;margin:0 0 8px">${esc(s.address)}</p>`:""}
+<p>Received from: <b>Parent/Guardian of ${esc(p.name)}</b> (${esc(p.cls)}${p.adm?" · #"+esc(p.adm):""})</p>
+<div class="amt">${esc(s.cur)} ${money(x.amt)}</div>
+<p>Method: <b>${esc(x.method||"Cash")}</b>${x.note?" · "+esc(x.note):""}</p>
+<p>Being: School fees, ${esc(s.term)} ${esc(s.year)}</p>
+<p>Date: ${fdate(x.date)}</p>
+<p style="font-size:13px">Fees due <b>${money(p.due)}</b> · Paid to date <b>${money(to)}</b> · Balance <b>${money(bal)}</b></p>
+${s.motto?`<p style="font-size:12px;font-style:italic;margin-top:10px">${esc(s.motto)}</p>`:""}
+<p style="margin-top:16px;font-size:13px">Received by: ____________________ (${{b:"Bursar",h:"Head",d:"Dev"}[role]||"Staff"})</p>
+</div>
+<div class="ft noprint">
+<a class="b wa sm" target="_blank" rel="noopener" href="${wa(p,t)}">Send on WhatsApp</a>
+<button class="b sm" onclick="window.print()">Print</button>
+<button class="b b2 sm" onclick="modal=null;render()">Close</button>
+</div></div></div>`}
+
+function render(){
+  const s=S.school;
+  document.body.className=role==="h"?"ro":"";
+  if(!role){$("#app").innerHTML=lockUI();$("#tabs").innerHTML="";$("#modal").innerHTML="";return}
+  $("#app").innerHTML=`<header>
+<button class="theme-btn" onclick="cycleTheme()">Theme</button>
+<button class="b b2 sm" style="float:right;color:#fff;border-color:#fff" onclick="lock()">Lock</button>
+<div class="sn">${esc(s.name)}</div>
+<div class="sub">School Fees · ${esc(s.term)} ${esc(s.year)} · ${{b:"Bursar",h:"Head teacher (view only)",d:"Developer"}[role]}</div>
+</header>`+(sel?detail():tab==="home"?home():tab==="pupils"?pupils():tab==="rem"?rem():sett());
+  $("#tabs").innerHTML=[["home","Home"],["pupils","Pupils"],["rem","Reminders"],["set","Settings"]].map(([k,l])=>`<button class="${!sel&&tab===k||sel&&k==="pupils"?"on":""}" onclick="tab='${k}';sel=null;render();scrollTo(0,0)">${l}</button>`).join("");
+  $("#modal").innerHTML=modal?rcpt():"";
+}
+function cycleTheme(){const o=["system","light","dark"];S.theme=o[(o.indexOf(S.theme||"system")+1)%3];applyTheme();save();toast("Theme: "+S.theme);render()}
 
 const pick=id=>{sel=id;render();scrollTo(0,0)};
 function ask(b,key,fn){if(armed===key){armed=null;fn();return}armed=key;const t=b.textContent;b.textContent="Tap again to confirm";setTimeout(()=>{if(armed===key){armed=null;b.textContent=t}},3500)}
-function addP(){const n=$("#an").value.trim(),c=$("#ac").value.trim();if(!n||!c){toast("Enter name and class");return}
-const f=num($("#af").value);S.pupils.push({id:uid(),name:n,cls:c,phone:ph($("#ap").value),due:f,base:f,pays:[]});logit("Added pupil "+n);render();toast("Pupil added")}
-function addMany(){let k=0;$("#bk").value.split("\n").forEach(l=>{const a=l.split(/[,\t]/).map(x=>x.trim());if(a.length<3||!a[0])return;
-const f=a.length>=4;S.pupils.push({id:uid(),name:a[0],cls:a[1],phone:f?ph(a[2]):"",due:num(a[f?3:2]),base:num(a[f?3:2]),pays:[]});k++});
-if(k){logit(k+" pupils added in bulk");render();toast(k+" pupils added")}else toast("Nothing to add. Check the format")}
-function addPay(id){const p=P_(id),amt=num($("#pa").value);if(!amt){toast("Enter the amount");return}
-S.rc++;p.pays.push({id:uid(),amt,date:$("#pd").value||today(),note:$("#pn").value.trim(),no:`R-${S.school.year}-${String(S.rc).padStart(4,"0")}`});
-const x=p.pays[p.pays.length-1];logit(`Payment ${x.no} ${money(x.amt)} for ${p.name}`);render();showR(id,x.id)}
+function addP(){
+  const n=$("#an").value.trim(),c=$("#ac").value.trim();if(!n||!c){toast("Enter name and class");return}
+  const f=num($("#af").value)||feeFor(c);const adm=($("#aa").value.trim()||nextAdm());
+  if(S.pupils.some(p=>p.adm&&p.adm===adm)){toast("Admission number already used");return}
+  S.pupils.push({id:uid(),name:n,cls:c,adm,phone:ph($("#ap").value),due:f,base:f,arr:0,pays:[]});
+  logit("Added pupil "+n);render();toast("Pupil added")}
+function addMany(){
+  let k=0;
+  $("#bk").value.split("\n").forEach(l=>{
+    const a=l.split(/[,\t]/).map(x=>x.trim());if(a.length<2||!a[0])return;
+    let name=a[0],cls=a[1],phone="",fee=0;
+    if(a.length===3){if(/^\d/.test(a[2].replace(/[^\d]/g,"")))fee=num(a[2]);else phone=a[2]}
+    else if(a.length>=4){phone=a[2];fee=num(a[3])}
+    if(!fee)fee=feeFor(cls);
+    S.pupils.push({id:uid(),name,cls,adm:nextAdm(),phone:ph(phone),due:fee,base:fee,arr:0,pays:[]});k++});
+  if(k){logit(k+" pupils added in bulk");render();toast(k+" pupils added")}else toast("Nothing to add. Check the format")}
+function addPay(id){
+  const p=P_(id),amt=num($("#pa").value);if(!amt||amt<=0){toast("Enter a valid amount");return}
+  S.rc=(S.rc||0)+1;
+  p.pays.push({id:uid(),amt,date:$("#pd").value||today(),note:$("#pn").value.trim(),method:$("#pm").value||"Cash",no:`R-${S.school.year}-${String(S.rc).padStart(4,"0")}`});
+  const x=p.pays[p.pays.length-1];logit(`Payment ${x.no} ${money(x.amt)} (${x.method}) for ${p.name}`);render();showR(id,x.id)}
 function showR(pid,xid){const p=P_(pid);let to=0,x;for(const y of p.pays){to+=y.void?0:y.amt;if(y.id===xid){x=y;break}}modal={p,x,to};render()}
 function pr(m,d){return new Promise(r=>{const e=document.createElement("div");e.className="modal";e.style.zIndex=40;e.innerHTML=`<div class="card" style="width:100%;max-width:380px"><label>${esc(m)}</label><input id="pri" value="${esc(d||"")}"><button class="b" id="pok">OK</button> <button class="b b2" id="pcn">Cancel</button></div>`;document.body.appendChild(e);const i=e.querySelector("#pri"),f=v=>{e.remove();r(v)};i.focus();e.querySelector("#pok").onclick=()=>f(i.value);e.querySelector("#pcn").onclick=()=>f(null);i.onkeydown=k=>{if(k.key==="Enter")f(i.value)}})}
 async function voidPay(pid,xid){const p=P_(pid),x=p.pays.find(y=>y.id===xid),why=((await pr("Reason for voiding this payment?"))||"").trim();if(!why){toast("A reason is required");return}x.void={why,by:role};logit(`VOID ${x.no} ${money(x.amt)} for ${p.name}: ${why}`);render();toast("Payment voided")}
-function editP(id){const p=P_(id);p.name=$("#en").value.trim()||p.name;p.cls=$("#ec").value.trim()||p.cls;p.phone=ph($("#ep").value);p.due=num($("#ef").value);p.base=p.due-(p.arr||0);logit("Edited pupil "+p.name);render();toast("Saved")}
+function editP(id){
+  const p=P_(id);p.name=$("#en").value.trim()||p.name;p.adm=$("#ea").value.trim();p.cls=$("#ec").value.trim()||p.cls;p.phone=ph($("#ep").value);
+  const newDue=num($("#ef").value);if(newDue!==p.due){p.due=newDue;p.base=newDue-(p.arr||0)}
+  logit("Edited pupil "+p.name);render();toast("Saved")}
 function delP(id){const p=P_(id);if(p.pays.length&&role!=="d"){toast("Only the developer can delete a pupil with payments");return}logit("Deleted pupil "+p.name);S.pupils=S.pupils.filter(q=>q.id!==id);sel=null;save();render();toast("Pupil deleted")}
 function backup(){S.lb=Date.now();save();const t=$("#bt");t.value=JSON.stringify(S);t.focus();t.select()}
 function restore(){try{const o=JSON.parse($("#bt").value);if(!o||!Array.isArray(o.pupils)||!o.school)throw 0;S=o;mig();logit("Restored from backup");render();toast("Restored")}catch(e){toast("That backup text is not valid")}}
-function lockUI(){const A=S.auth;
-if(!A.b)return`<div class="card lk"><h2>Set up security</h2><p class="mut">Done once by the installer.</p><label>School name</label><input id="sn" value="${esc(S.school.name)}"><label>Bursar PIN (4-6 digits)</label><input id="p1" type="password" inputmode="numeric" maxlength="6"><label>Head teacher PIN (4-6 digits)</label><input id="p2" type="password" inputmode="numeric" maxlength="6"><label>Developer code (private, 6+ characters)</label><input id="p3" type="password"><button class="b" onclick="setup()">Save and open</button></div>`;
-return`<div class="card lk"><h2>${esc(S.school.name)}</h2><p class="mut">Enter your PIN to open the fees records.</p><input id="pin" type="password" placeholder="PIN" onkeydown="if(event.key==='Enter')unlock()"><button class="b" onclick="unlock()">Unlock</button></div>`}
-function setup(){const a=$("#p1").value.trim(),b=$("#p2").value.trim(),c=$("#p3").value;
-if(!/^\d{4,6}$/.test(a)||!/^\d{4,6}$/.test(b)||a===b||c.length<6){toast("PINs: 4-6 digits and different. Developer code: 6+ characters");return}
-S.school.name=$("#sn").value.trim()||S.school.name;S.auth={b:hh(a),h:hh(b),d:hh(c)};role="d";logit("Security set up");bump();render()}
-function unlock(){if(Date.now()<wait){toast("Too many tries. Wait 30 seconds");return}
-const v=hh($("#pin").value.trim()),A=S.auth,r=v===A.b?"b":v===A.h?"h":v===A.d?"d":null;
-if(!r){if(++tries>=5){tries=0;wait=Date.now()+3e4}toast("Wrong PIN");return}
-tries=0;role=r;tab="home";sel=null;bump();render()}
+function lockUI(){
+  const A=S.auth;
+  if(!A.b)return`<div class="card lk"><h2>Set up security</h2><p class="mut">Done once by the installer / developer.</p>
+<label>School name</label><input id="sn" value="${esc(S.school.name)}">
+<label>Bursar PIN (4-6 digits)</label><input id="p1" type="password" inputmode="numeric" maxlength="6">
+<label>Head teacher PIN (4-6 digits)</label><input id="p2" type="password" inputmode="numeric" maxlength="6">
+<label>Developer code (private, 6+ characters)</label><input id="p3" type="password">
+<button class="b" onclick="setup()">Save and open</button></div>`;
+  return`<div class="card lk"><h2>${esc(S.school.name)}</h2><p class="mut">Enter your PIN to open the fees records.</p>
+<input id="pin" type="password" placeholder="PIN" onkeydown="if(event.key==='Enter')unlock()">
+<button class="b" onclick="unlock()">Unlock</button></div>`}
+function setup(){
+  const a=$("#p1").value.trim(),b=$("#p2").value.trim(),c=$("#p3").value;
+  if(!/^\d{4,6}$/.test(a)||!/^\d{4,6}$/.test(b)||a===b||c.length<6){toast("PINs: 4-6 digits and different. Developer code: 6+ characters");return}
+  S.school.name=$("#sn").value.trim()||S.school.name;S.auth={b:hh(a),h:hh(b),d:hh(c)};role="d";logit("Security set up");bump();render()}
+function unlock(){
+  if(Date.now()<wait){toast("Too many tries. Wait 30 seconds");return}
+  const v=hh($("#pin").value.trim()),A=S.auth,r=v===A.b?"b":v===A.h?"h":v===A.d?"d":null;
+  if(!r){if(++tries>=5){tries=0;wait=Date.now()+3e4}toast("Wrong PIN");return}
+  tries=0;role=r;tab="home";sel=null;bump();render()}
 function newPins(){const a=$("#n1").value.trim(),b=$("#n2").value.trim();if(!/^\d{4,6}$/.test(a)||!/^\d{4,6}$/.test(b)||a===b){toast("PINs: 4-6 digits and different");return}S.auth.b=hh(a);S.auth.h=hh(b);logit("PINs reset");render();toast("PINs reset")}
 function dl(n,x,m){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([x],{type:m}));a.download=n;a.click()}
 function bkFile(){S.lb=Date.now();logit("Backup downloaded");dl("fees-backup-"+nowL().slice(0,10)+".json",JSON.stringify(S),"application/json");render()}
 function rf(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("#bt").value=r.result;toast("File loaded. Tap Restore from text")};r.readAsText(f)}
-function csv(o){const r=[["Name","Class","Phone","Due","Paid","Balance","Status"]];S.pupils.forEach(p=>{const c=calc(p);if(o&&c.bal<=0)return;r.push([p.name,p.cls,showPh(p.phone||""),p.due,c.paid,Math.max(c.bal,0),c.st])});
-dl((o?"defaulters-":"pupils-")+nowL().slice(0,10)+".csv","\ufeff"+r.map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n"),"text/csv");logit("Exported "+(o?"defaulters":"all pupils")+" CSV")}
-async function newTerm(){const n=((await pr("Name of the new term (e.g. Term 1)"))||"").trim();if(!n)return;const y=((await pr("Year",S.school.year))||"").trim()||S.school.year,fee=await pr("New fees per pupil. Leave empty to keep each pupil's usual fee.");
-if(((await pr("Type YES to close "+S.school.term+" "+S.school.year+" and start "+n+" "+y+". Balances carry forward."))||"").trim().toUpperCase()!=="YES")return;
-S.pupils.forEach(p=>{const c=calc(p),b=p.base!=null?p.base:p.due,f=fee&&num(fee)?num(fee):b;(p.hist=p.hist||[]).push({t:S.school.term+" "+S.school.year,d:p.due,p:c.paid});p.base=f;p.arr=c.bal;p.due=f+c.bal;p.pays=[]});
-S.school.term=n;S.school.year=y;logit("Started "+n+" "+y);render();toast("New term started")}
+function csv(o){
+  const r=[["Admission","Name","Class","Phone","Current Fee","Arrears","Total Due","Paid","Balance","Status"]];
+  S.pupils.forEach(p=>{const c=calc(p);if(o&&c.bal<=0)return;const arr=p.arr||0;r.push([p.adm||"",p.name,p.cls,showPh(p.phone||""),p.due-arr,arr,p.due,c.paid,Math.max(c.bal,0),c.st])});
+  dl((o?"defaulters-":"pupils-")+nowL().slice(0,10)+".csv","\ufeff"+r.map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n"),"text/csv");
+  logit("Exported "+(o?"defaulters":"all pupils")+" CSV")}
+async function newTerm(){
+  const n=((await pr("Name of the new term (e.g. Term 1)"))||"").trim();if(!n)return;
+  const y=((await pr("Year",S.school.year))||"").trim()||S.school.year;
+  const fee=await pr("New fees per pupil (leave empty to keep each pupil's current base fee)");
+  if(((await pr("Type YES to close "+S.school.term+" "+S.school.year+" and start "+n+" "+y+". Balances will carry forward as arrears."))||"").trim().toUpperCase()!=="YES")return;
+  S.pupils.forEach(p=>{
+    const c=calc(p),b=p.base!=null?p.base:p.due,f=fee&&num(fee)?num(fee):b;
+    (p.hist=p.hist||[]).push({t:S.school.term+" "+S.school.year,d:p.due,p:c.paid});
+    p.base=f;p.arr=c.bal;p.due=f+c.bal;p.pays=[];
+  });
+  S.school.term=n;S.school.year=y;logit("Started "+n+" "+y);render();toast("New term started")}
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 render();
 </script>
